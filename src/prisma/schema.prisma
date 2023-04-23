@@ -1,0 +1,109 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    Admin
+    Accountant
+    Editor
+}
+
+enum GENDER {
+    Male
+    Female
+}
+
+model user {
+    id        String   @id @unique
+    name      String
+    username  String   @unique
+    email     String   @unique
+    password  String
+    role      Role
+    gender    GENDER
+    isAdmin   Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum TYPE {
+    individual
+    company
+}
+
+model address {
+    id          Int      @id @unique @default(autoincrement())
+    city        String
+    addressLine String
+    customer    customer @relation(fields: [customerId], references: [id])
+    customerId  String   @unique
+}
+
+model customer {
+    id          String    @id @unique
+    name        String
+    phoneNumber Int
+    address     address?
+    cinNumber   String
+    iceNumber   BigInt
+    type        TYPE
+    orders      order[]
+    invoices    invoice[]
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+}
+
+model order {
+    id         String   @id @unique
+    customer   customer @relation(fields: [customerId], references: [id])
+    customerId String
+    product    product  @relation(fields: [productId], references: [id])
+    productId  String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model invoice {
+    id         String        @id @unique
+    number     Int           @unique
+    status     String
+    date       DateTime
+    paymentDay DateTime?
+    total      Float
+    customer   customer      @relation(fields: [customerId], references: [id])
+    customerId String
+    products   invoiceItem[]
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
+}
+
+model invoiceItem {
+    id          String  @id @unique
+    invoice     invoice @relation(fields: [invoiceId], references: [id])
+    invoiceId   String
+    description String
+    quantity    Int
+    price       Float
+}
+
+model product {
+    id          String   @id @unique
+    orders      order[]
+    description String?
+    price       Float
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model CRM {
+    id          Int      @id @unique @default(autoincrement())
+    customer    String
+    interaction String
+    date        DateTime
+    user        String
+}
