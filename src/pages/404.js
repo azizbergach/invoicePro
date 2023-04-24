@@ -5,11 +5,6 @@ import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
 
 const Page = () => (
   <>
-    <Head>
-      <title>
-        404 | Devias Kit
-      </title>
-    </Head>
     <Box
       component="main"
       sx={{

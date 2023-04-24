@@ -6,11 +6,6 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
 const Page = () => (
   <>
-    <Head>
-      <title>
-        Settings | Devias Kit
-      </title>
-    </Head>
     <Box
       component="main"
       sx={{

@@ -6,7 +6,7 @@ import { generateToken } from '../../utils/auth';
 const login = async (req, res) => {
 
     if (req.method !== "POST") {
-        return res.redirect("/notfound", 404)
+        return res.redirect("/404", 404)
     }
 
     const { username, password } = req.body;
