@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,7 @@ import { Store } from '../../utils/store'
 
 const Page = () => {
   const router = useRouter();
-  const { state, dispatch } = useContext(Store);
+  const { state: { userInfo }, dispatch } = useContext(Store);
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -56,6 +56,22 @@ const Page = () => {
       }
     }
   });
+
+  useEffect(
+    () => {
+
+      if (userInfo) {
+        router
+          .replace({
+            pathname: '/',
+            query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
+          })
+      } else {
+        setChecked(true);
+      }
+    },
+    [router.isReady]
+  );
 
   return (
     <>
