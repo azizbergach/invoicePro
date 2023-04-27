@@ -94,7 +94,7 @@ const Page = () => {
                 <TextField
                   error={!!(formik.touched.name && formik.errors.name)}
                   fullWidth
-                  helperText={formik.touched.name && formik.errors.name}
+
                   label="Name"
                   name="name"
                   onBlur={formik.handleBlur}
@@ -104,7 +104,7 @@ const Page = () => {
                 <TextField
                   error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
-                  helperText={formik.touched.email && formik.errors.email}
+
                   label="Email Address"
                   name="email"
                   onBlur={formik.handleBlur}
@@ -115,7 +115,7 @@ const Page = () => {
                 <TextField
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
-                  helperText={formik.touched.password && formik.errors.password}
+
                   label="Password"
                   name="password"
                   onBlur={formik.handleBlur}

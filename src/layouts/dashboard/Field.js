@@ -1,4 +1,3 @@
-import { Flag } from "@mui/icons-material";
 import { Autocomplete, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import { cities } from 'list-of-moroccan-cities';
@@ -7,11 +6,9 @@ import MAFlag from "src/icons/MA";
 
 function Field({ label, name, childs, formik }) {
 
-
     const stackProps = {
         direction: "row",
         spacing: 5,
-        useFlexGap: true,
         justifyContent: "space-between",
         style: {
             marginBottom: 10
@@ -26,11 +23,19 @@ function Field({ label, name, childs, formik }) {
         </Stack>
     }
 
+    const handleAutocompleteChange = (event, value, name) => {
+        if (value !== null) {
+            formik.setFieldValue(name, value.label);
+        } else {
+            formik.setFieldValue(name, "");
+        }
+    };
+
     switch (name) {
         case 'name': case 'iceNumber': case 'cinNumber': case 'address':
             return <TextField
-                error={!!(formik.touched[name] && formik.errors[name])}
-                helperText={formik.touched[name] && formik.errors[name]}
+                error={formik.touched[name] && Boolean(formik.errors[name])}
+
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values[name]}
@@ -59,8 +64,7 @@ function Field({ label, name, childs, formik }) {
         case 'phoneNumber':
             return <TextField
                 fullWidth
-                error={!!(formik.touched[name] && formik.errors[name])}
-                helperText={formik.touched[name] && formik.errors[name]}
+                error={formik.touched[name] && Boolean(formik.errors[name])}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 value={formik.values[name]}
@@ -75,8 +79,8 @@ function Field({ label, name, childs, formik }) {
                                 <MAFlag />
                             </IconButton>
                             <span style={{
-                                color: "rgb(17, 25, 39);",
-                                fontFamily: "inherit;",
+                                color: "#0A0A0A",
+                                fontFamily: "inherit",
                                 fontSize: 14,
                                 fontWeight: 500,
                                 lineHeight: 24,
@@ -89,16 +93,16 @@ function Field({ label, name, childs, formik }) {
         case 'city':
             return <Autocomplete
                 fullWidth
-                error={!!(formik.touched[name] && formik.errors[name])}
-                helperText={formik.touched[name] && formik.errors[name]}
+                error={formik.touched[name] && Boolean(formik.errors[name])}
                 onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                onChange={(e, v) => handleAutocompleteChange(e, v, name)}
                 value={formik.values[name]}
                 disablePortal
+                isOptionEqualToValue={(option, value) => option.value === value}
                 id={name}
                 label={label}
                 name={name}
-                options={cities}
+                options={cities.map(city => ({ label: city.label }))}
                 sx={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="City" />}
             />

@@ -7,7 +7,6 @@ function ShowView({ customer, open, setOpen }) {
     const stackProps = {
         direction: "row",
         spacing: 5,
-        useFlexGap: true,
         justifyContent: "space-between",
         style: {
             marginBottom: 10
