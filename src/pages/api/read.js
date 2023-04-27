@@ -1,5 +1,4 @@
 import prisma from "src/lib/prisma";
-import bcrypt from "bcrypt"
 
 
 export default async (req, res) => {
@@ -8,12 +7,11 @@ export default async (req, res) => {
         return res.redirect("/404", 404)
     }
 
-    const { table, ...customerData } = req.body;
+    const { table, id } = req.body;
     try {
-        const data = await prisma[table].create({
-            data: {
-                id: await bcrypt.hash(Date.now().toString(), 1),
-                ...customerData
+        const data = await prisma[table].findFirst({
+            where: {
+                id
             }
         });
         return res.status(200).json(data)

@@ -5,15 +5,16 @@ export default async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash("12345678", 10)
 
-        const user = await prisma.user.create({
+        const user = await prisma.customer.create({
             data: {
-                id: hashedPassword,
-                name: "AYOUB ALAHYANE",
-                username: "ayoub2023",
-                email: "contact@starthinc.com",
-                password: hashedPassword,
-                role: "Admin",
-                gender: "Male"
+                id: await bcrypt.hash(Date.now().toString(), 1),
+                name: 'Aziz',
+                type: 'individual',
+                phoneNumber: '630633523',
+                city: 'Agadir',
+                address: 'DOUAR AMSDEKT TIDSSI NISSENDALNE',
+                cinNumber: '12000',
+                iceNumber: '00000000000'
             }
         })
 

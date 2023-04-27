@@ -36,26 +36,20 @@ enum TYPE {
     company
 }
 
-model address {
-    id          Int      @id @unique @default(autoincrement())
-    city        String
-    addressLine String
-    customer    customer @relation(fields: [customerId], references: [id])
-    customerId  String   @unique
-}
-
 model customer {
-    id          String    @id @unique
-    name        String
-    phoneNumber Int
-    address     address?
-    cinNumber   String
-    iceNumber   BigInt
-    type        TYPE
-    orders      order[]
-    invoices    invoice[]
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    id             String    @id @unique
+    name           String
+    phoneNumber    String
+    address        String
+    cinNumber      String
+    iceNumber      String
+    type           TYPE
+    orders         order[]
+    invoices       invoice[]
+    city           String
+    CustomerNumber Int       @unique @default(autoincrement())
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
 }
 
 model order {

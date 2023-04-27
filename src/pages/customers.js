@@ -1,6 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
-import Head from 'next/head';
-import { subDays, subHours } from 'date-fns';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
@@ -14,38 +12,59 @@ import AddPopup from 'src/layouts/dashboard/Add';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import prisma from 'src/lib/prisma';
+import { Store } from 'src/utils/store';
 
 
 
-const data = [
 
-];
+const Page = ({ data }) => {
 
-const useCustomers = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
+  const { state, dispatch } = useContext(Store);
+  const [customerData, setCustomerData] = useState(data);
 
-const useCustomerIds = (customers) => {
-  return useMemo(
-    () => {
-      return customers.map((customer) => customer.id);
-    },
-    [customers]
-  );
-};
+  const useCustomers = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(customerData, page, rowsPerPage);
+      },
+      [page, rowsPerPage, customerData]
+    );
+  };
 
-const Page = () => {
+  const useCustomerIds = (customers) => {
+    return useMemo(
+      () => {
+        return customers.map((customer) => customer.id);
+      }, [customers])
+  };
+
+
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
-  const [showAdd, setShowAdd] = useState(false)
+  const [showAdd, setShowAdd] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [buttons, setButtons] = useState(["Cancel", "Save"]);
+  const [title, setTitle] = useState("Add New Customer");
+
+  const handleSearch = (str) => {
+    setCustomerData(data.filter(c => c.name.includes(str) || c.phoneNumber.includes(str) || c.city.includes(str) || c.type.includes(str)))
+  }
+
+  const initialValues = {
+    name: '',
+    type: 'individual',
+    phoneNumber: '',
+    city: 'Agadir',
+    address: '',
+    cinNumber: '',
+    iceNumber: '',
+    submit: null
+  }
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -61,17 +80,67 @@ const Page = () => {
     []
   );
 
+
+  const add = async (id, values) => {
+    try {
+
+    } catch (error) {
+
+    }
+    const { data } = await axios.post('/api/create', {
+      table: "customer",
+      name: values.name,
+      type: values.type,
+      phoneNumber: values.phoneNumber,
+      city: values.city,
+      address: values.address,
+      cinNumber: values.cinNumber,
+      iceNumber: values.iceNumber
+    });
+    console.log('created new', data);
+    setCustomerData(prev => [...prev, data]);
+    dispatch({
+      type: "CREATE_CUSTOMER",
+      data
+    })
+
+    setShowAdd(false);
+  }
+
+
+  const update = async (id, values) => {
+
+    const { data } = await axios.post('/api/update', {
+      table: "customer",
+      where: {
+        id
+      },
+      data: {
+        name: values.name,
+        type: values.type,
+        phoneNumber: values.phoneNumber,
+        city: values.city,
+        address: values.address,
+        cinNumber: values.cinNumber,
+        iceNumber: values.iceNumber
+      }
+
+    });
+
+    console.log("updated :", data);
+
+    setCustomerData(prev => prev.map(customer => { if (customer.id === id) return data }));
+
+    dispatch({
+      type: "UPDATE_CUSTOMER",
+      data
+    })
+
+    setShowAdd(false);
+  }
+
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      type: 'individual',
-      phoneNumber: '',
-      city: 'Agadir',
-      address: '',
-      cinNumber: '',
-      iceNumber: '',
-      submit: null
-    },
+    initialValues,
     validationSchema: Yup.object({
       name: Yup
         .string()
@@ -103,21 +172,9 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-
-        const { data } = await axios.post('/api/create', {
-          table: "customer",
-          name: values.name,
-          type: values.type,
-          phoneNumber: values.phoneNumber,
-          city: values.city,
-          address: values.address,
-          cinNumber: values.cinNumber,
-          iceNumber: values.iceNumber
-        });
-        dispatch({
-          type: "CREATE_CUSTOMER",
-          data
-        })
+        const apiFunction = selectedId ? update : add;
+        const id = selectedId || null;
+        await apiFunction(id, values);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -125,6 +182,12 @@ const Page = () => {
       }
     }
   });
+
+
+  const handleSubmit = (e) => {
+    formik.handleSubmit();
+    e.preventDefault();
+  }
 
   const Fields = [
     {
@@ -176,6 +239,45 @@ const Page = () => {
       ]
     }
   ]
+
+  const handleEdit = async (id) => {
+    setShowAdd(true);
+    setSelectedId(id);
+    const { data } = await axios.post('/api/read', {
+      table: "customer",
+      id
+    })
+    formik.setValues(data, false);
+    setButtons(["Discard", "Update"]);
+    setTitle("Update Customer Info");
+  }
+
+  const ADDProps = {
+    handleSubmit,
+    buttons,
+    open: showAdd,
+    title,
+    setOpen: setShowAdd,
+    Fields,
+    formik
+  }
+
+  const handleDeleteMany = async (selected) => {
+    console.log(selected);
+    try {
+      const { data } = await axios.post('/api/deleteMany', {
+        table: "customer",
+        idsToDelete: selected
+      })
+      console.log(data);
+      dispatch({ action: 'DELETE_MANY', data });
+
+      setCustomerData(prev => prev.filter(c => !selected.includes(c.id)))
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -233,14 +335,14 @@ const Page = () => {
                     </SvgIcon>
                   )}
                   variant="contained"
-                  onClick={() => setShowAdd(prev => !prev)}
+                  onClick={() => { setShowAdd(prev => !prev); setSelectedId(null); formik.setValues(initialValues); setButtons(["Cancel", "Save"]); setTitle("Add New Customer") }}
                 >
                   Add
                 </Button>
               </div>
-              <AddPopup open={showAdd} type="customer" setOpen={setShowAdd} Fields={Fields} formik={formik} />
+              <AddPopup {...ADDProps} />
             </Stack>
-            <CustomersSearch />
+            <CustomersSearch selected={customersSelection.selected} handleSearch={handleSearch} handleDeleteMany={handleDeleteMany} />
             <CustomersTable
               count={data.length}
               items={customers}
@@ -253,6 +355,8 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={customersSelection.selected}
+              handleEdit={handleEdit}
+              setCustomerData={setCustomerData}
             />
           </Stack>
         </Container>
@@ -266,5 +370,14 @@ Page.getLayout = (page) => (
     {page}
   </DashboardLayout>
 );
+
+
+export async function getServerSideProps() {
+  const res = await prisma.customer.findMany();
+  const data = JSON.parse(JSON.stringify(res));
+  return {
+    props: { data }
+  }
+}
 
 export default Page;

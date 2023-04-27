@@ -107,8 +107,9 @@ const Page = () => {
                   name="username"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  type="text"
                   value={formik.values.username}
+                  type="text"
+                  
                 />
                 <TextField
                   error={!!(formik.touched.password && formik.errors.password)}

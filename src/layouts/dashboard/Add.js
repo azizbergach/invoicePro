@@ -5,15 +5,16 @@ import Field from "./Field";
 /**
  * 
  * @param {string} type  user, customer ...
- * @param {string} open  specifies whether this component is showing up or not
- * @param {string} setOpen  set the open to false
- * @param {string} Fields   specify the feilds that will be shown within the component
- * @param {string} formik formik
+ * @param {boolean} open  specifies whether this component is showing up or not
+ * @param {function} setOpen  set the open to false
+ * @param {array} Fields   specify the feilds that will be shown within the component
+ * @param {object} formik formik
+ * @param {array} buttons buttons name
  * 
  * @returns add new [type]
  */
 
-function AddPopup({ type, open, setOpen, Fields, formik }) {
+function AddPopup({ title, open, setOpen, Fields, formik, buttons, handleSubmit }) {
 
 
     const handleClose = () => {
@@ -26,12 +27,12 @@ function AddPopup({ type, open, setOpen, Fields, formik }) {
             onClose={handleClose}
         >
             <DialogTitle>
-                Create New {type}
+                {title}
             </DialogTitle>
 
             <form
                 noValidate
-                onSubmit={formik.handleSubmit}
+                onSubmit={handleSubmit}
             >
 
                 <DialogContent
@@ -47,8 +48,8 @@ function AddPopup({ type, open, setOpen, Fields, formik }) {
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" >Save</Button>
+                    <Button onClick={handleClose}>{buttons[0]}</Button>
+                    <Button type="submit" >{buttons[1]}</Button>
                 </DialogActions>
             </form>
         </Dialog>
