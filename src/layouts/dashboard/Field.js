@@ -48,7 +48,7 @@ function Field({ label, name, childs, formik }) {
                     id={name}
                     label={label}
                     name={name}
-                    value={formik.values.type}
+                    value={formik.values[name]}
                     onChange={formik.handleChange}
                 >
                     <MenuItem value="individual">Individual</MenuItem>
@@ -58,12 +58,12 @@ function Field({ label, name, childs, formik }) {
 
         case 'phoneNumber':
             return <TextField
-                error={!!(formik.touched.phone && formik.errors.phone)}
                 fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
+                error={!!(formik.touched[name] && formik.errors[name])}
+                helperText={formik.touched[name] && formik.errors[name]}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.phone}
+                value={formik.values[name]}
                 id={name}
                 label={label}
                 name={name}
@@ -88,12 +88,12 @@ function Field({ label, name, childs, formik }) {
 
         case 'city':
             return <Autocomplete
-                error={!!(formik.touched.city && formik.errors.city)}
                 fullWidth
-                helperText={formik.touched.city && formik.errors.city}
+                error={!!(formik.touched[name] && formik.errors[name])}
+                helperText={formik.touched[name] && formik.errors[name]}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.city}
+                value={formik.values[name]}
                 disablePortal
                 id={name}
                 label={label}
