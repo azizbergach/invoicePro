@@ -19,6 +19,7 @@ const reducer = (state, action) => {
             Cookies.set("userInfo", JSON.stringify(action.data));
             return { ...state, userInfo: action.data };
         case 'USER_LOGOUT':
+            console.log("log out");
             Cookies.remove('userInfo');
             return { ...state, userInfo: null }
 

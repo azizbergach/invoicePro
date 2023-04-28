@@ -1,9 +1,12 @@
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { Box, ButtonBase } from '@mui/material';
+import { useContext } from 'react';
+import { Store } from 'src/utils/store';
 
 export const SideNavItem = (props) => {
   const { active = false, disabled, external, icon, path, title } = props;
+  const { state, dispatch } = useContext(Store)
 
   const linkProps = path
     ? external
@@ -38,6 +41,7 @@ export const SideNavItem = (props) => {
             backgroundColor: 'rgba(255, 255, 255, 0.04)'
           }
         }}
+        {...(title === "Logout") && ({ onClick: () => dispatch({ type: "USER_LOGOUT" }) })}
         {...linkProps}
       >
         {icon && (

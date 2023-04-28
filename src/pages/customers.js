@@ -372,7 +372,7 @@ Page.getLayout = (page) => (
 );
 
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await prisma.customer.findMany();
   const data = JSON.parse(JSON.stringify(res));
   return {

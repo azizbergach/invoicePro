@@ -1,15 +1,10 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import Head from 'next/head';
-import NextLink from 'next/link';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
-  Alert,
   Box,
   Button,
-  FormHelperText,
-  Link,
   Stack,
   Tab,
   Tabs,
@@ -66,8 +61,6 @@ const Page = () => {
             pathname: '/',
             query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
           })
-      } else {
-        setChecked(true);
       }
     },
     [router.isReady]
