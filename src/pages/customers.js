@@ -14,7 +14,25 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import prisma from 'src/lib/prisma';
 import { Store } from 'src/utils/store';
+import { useSnackbar } from 'notistack';
 
+
+
+const useCustomers = (customerData, page, rowsPerPage) => {
+  return useMemo(
+    () => {
+      return applyPagination(customerData, page, rowsPerPage);
+    },
+    [page, rowsPerPage, customerData]
+  );
+};
+
+const useCustomerIds = (customers) => {
+  return useMemo(
+    () => {
+      return customers.map((customer) => customer.id);
+    }, [customers])
+};
 
 
 
@@ -22,34 +40,18 @@ const Page = ({ data }) => {
 
   const { state, dispatch } = useContext(Store);
   const [customerData, setCustomerData] = useState(data);
-
-  const useCustomers = (page, rowsPerPage) => {
-    return useMemo(
-      () => {
-        return applyPagination(customerData, page, rowsPerPage);
-      },
-      [page, rowsPerPage, customerData]
-    );
-  };
-
-  const useCustomerIds = (customers) => {
-    return useMemo(
-      () => {
-        return customers.map((customer) => customer.id);
-      }, [customers])
-  };
-
-
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
+  const customers = useCustomers(customerData, page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
   const [showAdd, setShowAdd] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [buttons, setButtons] = useState(["Cancel", "Save"]);
   const [title, setTitle] = useState("Add New Customer");
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+
 
   const handleSearch = (str) => {
     setCustomerData(data.filter(c => c.name.includes(str) || c.phoneNumber.includes(str) || c.city.includes(str) || c.type.includes(str)))
@@ -83,39 +85,8 @@ const Page = ({ data }) => {
 
   const add = async (id, values) => {
     try {
-
-    } catch (error) {
-
-    }
-    const { data } = await axios.post('/api/create', {
-      table: "customer",
-      name: values.name,
-      type: values.type,
-      phoneNumber: values.phoneNumber,
-      city: values.city,
-      address: values.address,
-      cinNumber: values.cinNumber,
-      iceNumber: values.iceNumber
-    });
-    console.log('created new', data);
-    setCustomerData(prev => [...prev, data]);
-    dispatch({
-      type: "CREATE_CUSTOMER",
-      data
-    })
-
-    setShowAdd(false);
-  }
-
-
-  const update = async (id, values) => {
-
-    const { data } = await axios.post('/api/update', {
-      table: "customer",
-      where: {
-        id
-      },
-      data: {
+      const { data } = await axios.post('/api/create', {
+        table: "customer",
         name: values.name,
         type: values.type,
         phoneNumber: values.phoneNumber,
@@ -123,20 +94,45 @@ const Page = ({ data }) => {
         address: values.address,
         cinNumber: values.cinNumber,
         iceNumber: values.iceNumber
-      }
+      });
+      setCustomerData(prev => [...prev, data]);
+      dispatch({
+        type: "CREATE_CUSTOMER",
+        data
+      });
+      enqueueSnackbar(`${data.name} was added successfuly`, { variant: "success" });
 
-    });
+      setShowAdd(false);
+    } catch (err) {
+      enqueueSnackbar(err.response.data.message || err.message, { variant: "error" });
+    }
+  }
 
-    console.log("updated :", data);
 
-    setCustomerData(prev => prev.map(customer => { if (customer.id === id) return data }));
+  const update = async (id, values) => {
 
-    dispatch({
-      type: "UPDATE_CUSTOMER",
-      data
-    })
+    try {
+      const { data } = await axios.post('/api/update', {
+        table: "customer",
+        where: {
+          id
+        },
+        data: values
+      });
 
-    setShowAdd(false);
+      setCustomerData(prev => prev.map(customer => { return (customer.id === id) ? data : customer }));
+
+      dispatch({
+        type: "UPDATE_CUSTOMER",
+        data
+      })
+
+      enqueueSnackbar(`${data.name} was updated successfuly`, { variant: "success" });
+
+      setShowAdd(false);
+    } catch (err) {
+      enqueueSnackbar(err.response.data.message || err.message, { variant: "error" });
+    }
   }
 
   const formik = useFormik({
@@ -176,15 +172,14 @@ const Page = ({ data }) => {
         const id = selectedId || null;
         await apiFunction(id, values);
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        enqueueSnackbar(err.response.data.message || err.message, { variant: "error" });
       }
     }
   });
 
 
   const handleSubmit = (e) => {
+    closeSnackbar();
     formik.handleSubmit();
     e.preventDefault();
   }

@@ -24,7 +24,7 @@ export const CustomersSearch = ({ handleSearch, selected, handleDeleteMany }) =>
       sx={{ maxWidth: 500 }}
     />
     {
-      (selected.length > 1) && <Button variant='contained' onClick={() => handleDeleteMany(selected)} >
+      (selected.length > 1) && <Button variant='contained' color='error' onClick={() => handleDeleteMany(selected)} >
         Delete Many
       </Button>
     }

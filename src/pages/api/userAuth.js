@@ -38,7 +38,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "invalid password" })
         }
     }
-    return res.status(401).json({ message: "invalid email" })
+    return res.status(401).json({ message: "invalid username or email" })
 }
 
 export default login;

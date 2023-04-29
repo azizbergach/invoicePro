@@ -13,9 +13,12 @@ import {
 } from '@mui/material';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 import axios from 'axios';
-import { Store } from '../../utils/store'
+import { Store } from '../../utils/store';
+import { useSnackbar } from 'notistack';
 
 const Page = () => {
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const { state: { userInfo }, dispatch } = useContext(Store);
   const formik = useFormik({
@@ -34,6 +37,7 @@ const Page = () => {
         .required('Password is required'),
     }),
     onSubmit: async (values, helpers) => {
+      closeSnackbar();
       try {
         const { data } = await axios.post('/api/userAuth', {
           username: values.username,
@@ -42,12 +46,10 @@ const Page = () => {
         dispatch({
           type: "USER_LOGIN",
           data
-        })
+        });
         router.push('/');
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
-        helpers.setSubmitting(false);
+        enqueueSnackbar(err.response.data.message || err.message, { variant: "error" });
       }
     }
   });
@@ -132,15 +134,6 @@ const Page = () => {
                   value={formik.values.password}
                 />
               </Stack>
-              {formik.errors.submit && (
-                <Typography
-                  color="error"
-                  sx={{ mt: 3 }}
-                  variant="body2"
-                >
-                  {formik.errors.submit}
-                </Typography>
-              )}
               <Button
                 fullWidth
                 size="large"

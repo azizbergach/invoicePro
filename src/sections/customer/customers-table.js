@@ -33,6 +33,7 @@ import React from 'react';
 import { phoneFromat } from 'src/utils/format';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ShowView from 'src/layouts/dashboard/show';
+import { useSnackbar } from 'notistack';
 
 
 
@@ -69,18 +70,25 @@ export const CustomersTable = (props) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [view, setView] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleDelete = async (id) => {
     if (id === 'Yes') {
-      await axios.post('api/delete', {
-        where: {
-          id: selectedCustomer.id
-        },
-        table: "customer"
-      });
-      setCustomerData(prev => prev.filter(c => c.id !== selectedCustomer.id))
-      setShowConfirm(false);
-      setSelectedCustomer(null);
+      try {
+        await axios.post('api/delete', {
+          where: {
+            id: selectedCustomer.id
+          },
+          table: "customer"
+        });
+        setCustomerData(prev => prev.filter(c => c.id !== selectedCustomer.id));
+        enqueueSnackbar(`${selectedCustomer.name} was deleted successfuly`, { variant: "success" });
+        setShowConfirm(false);
+        setSelectedCustomer(null);
+      } catch (err) {
+        enqueueSnackbar(err.response.data.message || err.message, { variant: "error" });
+      }
+
     } else if (id === 'No') {
       setShowConfirm(false);
       setSelectedCustomer(null);
