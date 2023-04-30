@@ -54,9 +54,9 @@ const Page = ({ data }) => {
 
   const initialValues = {
     name: '',
-    type: 'individual',
+    type: '',
     phoneNumber: '',
-    city: 'Agadir',
+    city: '',
     address: '',
     cinNumber: '',
     iceNumber: '',
@@ -140,7 +140,8 @@ const Page = ({ data }) => {
         .required()
       ,
       type: Yup
-        .string(),
+        .string()
+        .required(),
       phoneNumber: Yup
         .string()
         .max(9)
@@ -148,7 +149,8 @@ const Page = ({ data }) => {
         .matches(/\d+/i)
         .required(),
       city: Yup
-        .string(),
+        .string()
+        .required(),
       address: Yup
         .string()
         .required(),
@@ -189,7 +191,8 @@ const Page = ({ data }) => {
         },
         {
           label: "Type",
-          name: "type"
+          name: "type",
+          options: ['individual', 'company']
         }
       ]
     },

@@ -4,7 +4,7 @@ import { cities } from 'list-of-moroccan-cities';
 import MAFlag from "src/icons/MA";
 
 
-function Field({ label, name, childs, formik }) {
+function Field({ label, name, childs, options, formik }) {
 
     const stackProps = {
         direction: "row",
@@ -49,26 +49,32 @@ function Field({ label, name, childs, formik }) {
                 fullWidth
             />
         case 'type':
-            return <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
-                <Select
-                    labelId="type-customer"
-                    id={name}
-                    label={label}
-                    name={name}
+            return <Autocomplete
+                fullWidth
+                {
+                ...(formik && {
+                    onBlur: formik.handleBlur,
+                    value: formik.values[name],
+                    onChange: (e, v) => handleAutocompleteChange(e, v, name)
+                })
+                }
+                disablePortal
+                id={name}
+                label={label}
+                name={name}
+                options={options.map(option => ({ label: option }))}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField
+                    {...params}
                     {
                     ...(formik && {
                         error: formik.touched[name] && Boolean(formik.errors[name]),
-                        onBlur: formik.handleBlur,
-                        onChange: formik.handleChange,
-                        value: formik.values[name],
                     })
                     }
-                >
-                    <MenuItem value="individual">Individual</MenuItem>
-                    <MenuItem value="company">Company</MenuItem>
-                </Select>
-            </FormControl>
+                    label="Type"
+                />
+                }
+            />
 
         case 'phoneNumber':
             return <TextField
@@ -120,7 +126,15 @@ function Field({ label, name, childs, formik }) {
                 name={name}
                 options={cities.map(city => ({ label: city.label }))}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="City" />}
+                renderInput={(params) => <TextField
+                    {...params}
+                    {
+                    ...(formik && {
+                        error: formik.touched[name] && Boolean(formik.errors[name]),
+                    })
+                    }
+                    label="City"
+                />}
             />
     }
 }

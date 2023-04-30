@@ -38,7 +38,10 @@ const App = (props) => {
           content="initial-scale=1, width=device-width"
         />
       </Head>
-      <SnackbarProvider>
+      <SnackbarProvider anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <StoreProvider>
             <AuthProvider>

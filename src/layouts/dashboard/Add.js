@@ -18,7 +18,8 @@ function AddPopup({ title, open, setOpen, Fields, formik, buttons, handleSubmit 
 
 
     const handleClose = () => {
-        setOpen(false)
+        formik.resetForm();
+        setOpen(false);
     }
 
     return (
