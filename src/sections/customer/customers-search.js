@@ -1,7 +1,7 @@
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import { Button, Card, InputAdornment, OutlinedInput, SvgIcon } from '@mui/material';
 
-export const CustomersSearch = ({ handleSearch, selected, handleDeleteMany }) => (
+export const CustomersSearch = ({ selected, handleDeleteMany, setSearchQuery }) => (
   <Card sx={{ p: 2 }} style={{
     display: 'flex',
     justifyContent: "space-between"
@@ -9,7 +9,7 @@ export const CustomersSearch = ({ handleSearch, selected, handleDeleteMany }) =>
     <OutlinedInput
       defaultValue=""
       fullWidth
-      onChange={(e) => handleSearch(e.target.value)}
+      onChange={(e) => setSearchQuery(e.target.value)}
       placeholder="Search customer"
       startAdornment={(
         <InputAdornment position="start">

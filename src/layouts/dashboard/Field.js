@@ -34,11 +34,14 @@ function Field({ label, name, childs, formik }) {
     switch (name) {
         case 'name': case 'iceNumber': case 'cinNumber': case 'address':
             return <TextField
-                error={formik.touched[name] && Boolean(formik.errors[name])}
-
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values[name]}
+                {
+                ...(formik && {
+                    error: formik.touched[name] && Boolean(formik.errors[name]),
+                    onBlur: formik.handleBlur,
+                    onChange: formik.handleChange,
+                    value: formik.values[name],
+                })
+                }
                 id={name}
                 label={label}
                 name={name}
@@ -53,8 +56,14 @@ function Field({ label, name, childs, formik }) {
                     id={name}
                     label={label}
                     name={name}
-                    value={formik.values[name]}
-                    onChange={formik.handleChange}
+                    {
+                    ...(formik && {
+                        error: formik.touched[name] && Boolean(formik.errors[name]),
+                        onBlur: formik.handleBlur,
+                        onChange: formik.handleChange,
+                        value: formik.values[name],
+                    })
+                    }
                 >
                     <MenuItem value="individual">Individual</MenuItem>
                     <MenuItem value="company">Company</MenuItem>
@@ -64,10 +73,14 @@ function Field({ label, name, childs, formik }) {
         case 'phoneNumber':
             return <TextField
                 fullWidth
-                error={formik.touched[name] && Boolean(formik.errors[name])}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values[name]}
+                {
+                ...(formik && {
+                    error: formik.touched[name] && Boolean(formik.errors[name]),
+                    onBlur: formik.handleBlur,
+                    onChange: formik.handleChange,
+                    value: formik.values[name],
+                })
+                }
                 id={name}
                 label={label}
                 name={name}
@@ -93,12 +106,15 @@ function Field({ label, name, childs, formik }) {
         case 'city':
             return <Autocomplete
                 fullWidth
-                error={formik.touched[name] && Boolean(formik.errors[name])}
-                onBlur={formik.handleBlur}
-                onChange={(e, v) => handleAutocompleteChange(e, v, name)}
-                value={formik.values[name]}
+                {
+                ...(formik && {
+                    error: formik.touched[name] && Boolean(formik.errors[name]),
+                    onBlur: formik.handleBlur,
+                    value: formik.values[name],
+                    onChange: (e, v) => handleAutocompleteChange(e, v, name)
+                })
+                }
                 disablePortal
-                isOptionEqualToValue={(option, value) => option.value === value}
                 id={name}
                 label={label}
                 name={name}

@@ -15,6 +15,7 @@ import axios from 'axios';
 import prisma from 'src/lib/prisma';
 import { Store } from 'src/utils/store';
 import { useSnackbar } from 'notistack';
+import FilterCustomers from 'src/sections/customer/customers-filter';
 
 
 
@@ -50,12 +51,6 @@ const Page = ({ data }) => {
   const [buttons, setButtons] = useState(["Cancel", "Save"]);
   const [title, setTitle] = useState("Add New Customer");
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-
-
-  const handleSearch = (str) => {
-    setCustomerData(data.filter(c => c.name.includes(str) || c.phoneNumber.includes(str) || c.city.includes(str) || c.type.includes(str)))
-  }
 
   const initialValues = {
     name: '',
@@ -274,6 +269,13 @@ const Page = ({ data }) => {
     }
   }
 
+  const filterCustomersProps = {
+    setCustomerData,
+    data,
+    selected: customersSelection.selected,
+    handleDeleteMany: handleDeleteMany
+  }
+
   return (
     <>
 
@@ -337,7 +339,7 @@ const Page = ({ data }) => {
               </div>
               <AddPopup {...ADDProps} />
             </Stack>
-            <CustomersSearch selected={customersSelection.selected} handleSearch={handleSearch} handleDeleteMany={handleDeleteMany} />
+            <FilterCustomers {...filterCustomersProps} />
             <CustomersTable
               count={data.length}
               items={customers}
