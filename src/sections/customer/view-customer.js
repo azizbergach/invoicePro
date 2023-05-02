@@ -1,17 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { Stack } from "@mui/system";
 import { phoneFromat } from "src/utils/format";
 
-function ShowView({ customer, open, setOpen }) {
-
-    const stackProps = {
-        direction: "row",
-        spacing: 5,
-        justifyContent: "space-between",
-        style: {
-            marginBottom: 10
-        }
-    }
+function ViewCustumer({ customer, open, setOpen }) {
 
     const handleClose = () => {
         setOpen(false)
@@ -59,4 +49,4 @@ function ShowView({ customer, open, setOpen }) {
     </Dialog >) : null;
 }
 
-export default ShowView;
+export default ViewCustumer;

@@ -78,17 +78,11 @@ const Page = ({ data }) => {
   );
 
 
-  const add = async (id, values) => {
+  const add = async (values) => {
     try {
       const { data } = await axios.post('/api/create', {
         table: "customer",
-        name: values.name,
-        type: values.type,
-        phoneNumber: values.phoneNumber,
-        city: values.city,
-        address: values.address,
-        cinNumber: values.cinNumber,
-        iceNumber: values.iceNumber
+        ...values
       });
       setCustomerData(prev => [...prev, data]);
       dispatch({
@@ -104,13 +98,13 @@ const Page = ({ data }) => {
   }
 
 
-  const update = async (id, values) => {
+  const update = async (values) => {
 
     try {
       const { data } = await axios.post('/api/update', {
         table: "customer",
         where: {
-          id
+          id: values.id
         },
         data: values
       });
@@ -233,6 +227,16 @@ const Page = ({ data }) => {
     }
   ]
 
+  const ADDProps = {
+    handleSubmit,
+    buttons,
+    open: showAdd,
+    title,
+    setOpen: setShowAdd,
+    Fields,
+    formik
+  }
+
   const handleEdit = async (id) => {
     setShowAdd(true);
     setSelectedId(id);
@@ -243,16 +247,6 @@ const Page = ({ data }) => {
     formik.setValues(data, false);
     setButtons(["Discard", "Update"]);
     setTitle("Update Customer Info");
-  }
-
-  const ADDProps = {
-    handleSubmit,
-    buttons,
-    open: showAdd,
-    title,
-    setOpen: setShowAdd,
-    Fields,
-    formik
   }
 
   const handleDeleteMany = async (selected) => {

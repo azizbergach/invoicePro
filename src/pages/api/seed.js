@@ -1,26 +1,21 @@
-import bcrypt from "bcrypt"
-import prisma from "src/lib/prisma"
+import prisma from "src/lib/prisma";
+import {
+    generateCompanyMockData,
+    generateCustomerMockData,
+    generateuserMockData
+} from "../../utils/mock-data";
+
 
 export default async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash("12345678", 10)
 
-        const user = await prisma.customer.create({
-            data: {
-                id: await bcrypt.hash(Date.now().toString(), 1),
-                name: 'Aziz',
-                type: 'individual',
-                phoneNumber: '630633523',
-                city: 'Agadir',
-                address: 'DOUAR AMSDEKT TIDSSI NISSENDALNE',
-                cinNumber: '12000',
-                iceNumber: '00000000000'
-            }
-        })
+        const data = generateCompanyMockData(); /// use "await" if it is an "async" func
+        console.log(data);
+        /* const user = await prisma.company.createMany({ data }) */
 
         return res.status(201).json({ user })
     } catch (error) {
         console.error(error)
-        return res.status(500).json({ message: "Failed to create user" })
+        return res.status(500).json({ message: error.message })
     }
 }

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 
 
 export default async (req, res) => {
-
+    console.log("run");
     if (req.method !== "POST") {
         return res.redirect("/404", 404)
     }

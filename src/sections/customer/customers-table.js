@@ -28,12 +28,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { useState } from 'react';
-import { TransitionProps } from '@mui/material/transitions';
 import React from 'react';
 import { phoneFromat } from 'src/utils/format';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import ShowView from 'src/layouts/dashboard/show';
 import { useSnackbar } from 'notistack';
+import ViewCustumer from './view-customer';
 
 
 
@@ -265,7 +264,7 @@ export const CustomersTable = (props) => {
           <Button color='error' onClick={() => handleDelete('Yes')}>Yes</Button>
         </DialogActions>
       </Dialog>
-      <ShowView open={view} setOpen={setView} customer={selectedCustomer} />
+      <ViewCustumer open={view} setOpen={setView} customer={selectedCustomer} />
     </Card>
   );
 };

@@ -7,33 +7,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum Role {
-    Admin
-    Accountant
-    Editor
-}
-
-enum GENDER {
-    Male
-    Female
-}
-
 model user {
     id        String   @id @unique
     name      String
     username  String   @unique
     email     String   @unique
     password  String
-    role      Role
-    gender    GENDER
+    role      String
+    gender    String
     isAdmin   Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-}
-
-enum TYPE {
-    individual
-    company
 }
 
 model customer {
@@ -43,13 +27,33 @@ model customer {
     address        String
     cinNumber      String
     iceNumber      String
-    type           TYPE
+    type           String
     orders         order[]
     invoices       invoice[]
     city           String
     CustomerNumber Int       @unique @default(autoincrement())
     createdAt      DateTime  @default(now())
     updatedAt      DateTime  @updatedAt
+}
+
+model company {
+    id            String   @id @unique
+    name          String
+    phoneNumber   String
+    address       String
+    ifNumber      String
+    iceNumber     String
+    tpNumber      String
+    type          String
+    city          String
+    bank          String
+    rib           String
+    logoUrl       String
+    invoice       invoice  @relation(fields: [invoiceId], references: [id])
+    invoiceId     String   @unique
+    CompanyNumber Int      @unique @default(autoincrement())
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 }
 
 model order {
@@ -72,6 +76,7 @@ model invoice {
     customer   customer      @relation(fields: [customerId], references: [id])
     customerId String
     products   invoiceItem[]
+    company    company?
     createdAt  DateTime      @default(now())
     updatedAt  DateTime      @updatedAt
 }
