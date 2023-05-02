@@ -237,14 +237,10 @@ const Page = ({ data }) => {
     formik
   }
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (customer) => {
     setShowAdd(true);
-    setSelectedId(id);
-    const { data } = await axios.post('/api/read', {
-      table: "customer",
-      id
-    })
-    formik.setValues(data, false);
+    setSelectedId(customer.id);
+    formik.setValues(customer, false);
     setButtons(["Discard", "Update"]);
     setTitle("Update Customer Info");
   }

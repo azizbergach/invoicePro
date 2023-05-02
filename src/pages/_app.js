@@ -11,6 +11,7 @@ import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import StoreProvider from '../utils/store';
 import { SnackbarProvider } from 'notistack';
+import "../styles/main.css";
 
 
 

@@ -150,7 +150,7 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
 
         case 'logoUrl':
             return <Stack direction="column" alignItems="center" spacing={2} justifyContent="center" marginX="auto">
-                <Avatar src={file} sx={{ width: 60, height: 60 }} />
+                <Avatar src={file} sx={{ objectFit: "cover", width: 60, height: 60 }} />
                 <Box sx={{ position: "relative" }}>
                     <input
                         accept="image/*"

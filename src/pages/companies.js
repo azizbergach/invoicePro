@@ -1010,13 +1010,23 @@ const Page = () => {
       ]
     },
     {
-      label: "N° de Compte Bancaire",
-      name: "rib",
-      options: ['CIH', 'Al barid bank', 'Bank of Africa'],
+      name: "stack",
+      childs: [
+        {
+          label: "N° de Compte Bancaire",
+          name: "rib",
+          options: ['CIH', 'Al barid bank', 'Bank of Africa'],
+        }
+      ]
     },
     {
-      label: "ICE",
-      name: "iceNumber"
+      name: "stack",
+      childs: [
+        {
+          label: "ICE",
+          name: "iceNumber"
+        }
+      ]
     }
   ]
 
@@ -1030,14 +1040,10 @@ const Page = () => {
     formik
   }
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (company) => {
     setShowAdd(true);
-    setSelectedId(id);
-    const { data } = await axios.post('/api/read', {
-      table: "company",
-      id
-    })
-    formik.setValues(data, false);
+    setSelectedId(company.id);
+    formik.setValues(company, false);
     setButtons(["Discard", "Update"]);
     setTitle("Update Company Info");
   }
@@ -1104,7 +1110,7 @@ const Page = () => {
                 <AddPopup {...ADDProps} />
               </div>
             </Stack>
-            <FilterCompanies {...{ data, setCompanyData }} />
+            <FilterCompanies {...{ data, setCompanyData, setPage }} />
             <Grid
               container
               spacing={3}

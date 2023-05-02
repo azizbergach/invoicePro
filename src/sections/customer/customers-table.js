@@ -223,7 +223,7 @@ export const CustomersTable = (props) => {
                         <IconButton onClick={() => handleView(customer)} color='secondary' aria-label="delete">
                           <VisibilityIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleEdit(customer.id)} color='primary' aria-label="delete">
+                        <IconButton onClick={() => handleEdit(customer)} color='primary' aria-label="delete">
                           <EditIcon />
                         </IconButton>
                         <IconButton onClick={() => handleDelete(customer)} color='error' aria-label="delete">

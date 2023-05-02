@@ -96,7 +96,7 @@ export const CompanyCard = ({ company, handleEdit, setCompanyData }) => {
         <IconButton onClick={() => handleView(company)} color='secondary' aria-label="delete">
           <VisibilityIcon />
         </IconButton>
-        <IconButton onClick={() => handleEdit(company.id)} color='primary' aria-label="delete">
+        <IconButton onClick={() => handleEdit(company)} color='primary' aria-label="delete">
           <EditIcon />
         </IconButton>
         <IconButton onClick={() => handleDelete(company)} color='error' aria-label="delete">
