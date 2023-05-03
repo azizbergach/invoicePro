@@ -1,13 +1,17 @@
-import styled from "@emotion/styled";
-import { Autocomplete, Avatar, Button, FormControl, IconButton, Input, InputAdornment, NativeSelect, Select, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Button, Card, FormControl, IconButton, Input, InputAdornment, InputLabel, NativeSelect, OutlinedInput, Select, TextField } from "@mui/material";
 import { Box, Stack } from "@mui/system";
+import { FieldArray, FormikProvider } from "formik";
 import { cities } from 'list-of-moroccan-cities';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MAFlag from "src/icons/MA";
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
+function Field(props) {
 
-function Field({ label, name, childs, options, formik, addedProps = {} }) {
+    const { label, name, childs, options, currency, formik, addedProps = {} } = props;
 
     const [file, setFile] = useState("");
 
@@ -43,7 +47,7 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
     }
 
     switch (name) {
-        case 'name': case 'iceNumber': case 'cinNumber': case 'address': case "tpNumber": case "ifNumber":
+        case 'name': case 'iceNumber': case 'cinNumber': case 'address': case "tpNumber": case "ifNumber": case 'sku': case 'quantity':
             return <TextField
                 {
                 ...(formik && {
@@ -59,7 +63,7 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
                 type="text"
                 fullWidth
             />
-        case 'type':
+        case 'type': case 'category': case 'status':
             return <Autocomplete
                 fullWidth
                 {
@@ -82,7 +86,7 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
                         error: formik.touched[name] && Boolean(formik.errors[name]),
                     })
                     }
-                    label="Type"
+                    label={label}
                 />
                 }
             />
@@ -148,9 +152,9 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
                 />}
             />
 
-        case 'logoUrl':
+        case 'logoUrl': case 'image':
             return <Stack direction="column" alignItems="center" spacing={2} justifyContent="center" marginX="auto">
-                <Avatar src={file} sx={{ objectFit: "cover", width: 60, height: 60 }} />
+                <Avatar src={file} variant='square' sx={{ objectFit: "cover", width: 60, height: 60 }} />
                 <Box sx={{ position: "relative" }}>
                     <input
                         accept="image/*"
@@ -207,6 +211,101 @@ function Field({ label, name, childs, options, formik, addedProps = {} }) {
                     ),
                 }}
             />
+
+        case 'price':
+            return <OutlinedInput
+                id="outlined-adornment-amount"
+                startAdornment={<InputAdornment position="start">{currency}</InputAdornment>}
+                name={name}
+                {
+                ...(formik && {
+                    error: formik.touched[name] && Boolean(formik.errors[name]),
+                    onBlur: formik.handleBlur,
+                    onChange: formik.handleChange,
+                    value: formik.values[name],
+                })
+                }
+            />
+
+        case 'options':
+            return <FormikProvider value={formik}>
+                <FieldArray name="options">
+                    {({ push, remove }) =>
+                        <div>
+                            {formik.values.options.length > 0 && formik.values.options.map((option, index) => (
+                                <Card key={index} sx={{ marginBlock: 5, boxShadow: "0 0 9px #d2caca !important", padding: "2em" }} >
+                                    <Stack key={index} {...stackProps}>
+                                        <TextField
+                                            name={`options[${index}].name`}
+                                            fullWidth
+                                            label={label}
+                                            value={option.name}
+                                            {
+                                            ...(formik && {
+                                                error: formik.touched.options && formik.errors.options?.[index]?.name ? true : false,
+                                                onBlur: formik.handleBlur,
+                                                onChange: formik.handleChange
+                                            })
+                                            }
+                                        />
+                                        <IconButton onClick={() => remove(idx)} color='error' aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Stack>
+                                    <FieldArray name={`options[${index}].variants`}>
+                                        {({ push, remove }) => <div>
+                                            {option.variants.length > 0 && option.variants.map((variant, idx) => (
+                                                <Stack key={idx} {...stackProps}>
+                                                    <TextField
+                                                        name={`options[${index}].variants[${idx}].name`}
+                                                        label="Variant Name"
+                                                        value={variant.name}
+                                                        {
+                                                        ...(formik && {
+                                                            error: formik.touched.options &&
+                                                                formik.touched.options[index]?.variants &&
+                                                                formik.errors.options?.[index]?.variants?.[idx]?.name
+                                                                ? true
+                                                                : false,
+                                                            onBlur: formik.handleBlur,
+                                                            onChange: formik.handleChange
+                                                        })
+                                                        }
+                                                    />
+                                                    <TextField
+                                                        name={`options[${index}].variants[${idx}].price`}
+                                                        label="Variant Price"
+                                                        value={variant.price}
+                                                        {
+                                                        ...(formik && {
+                                                            error: formik.touched.options &&
+                                                                formik.touched.options[index]?.variants &&
+                                                                formik.errors.options?.[index]?.variants?.[idx]?.price
+                                                                ? true
+                                                                : false,
+                                                            onBlur: formik.handleBlur,
+                                                            onChange: formik.handleChange
+                                                        })
+                                                        }
+                                                    />
+                                                    <Box flexDirection="column" >
+                                                        <IconButton onClick={() => remove(idx)} color='error' aria-label="delete">
+                                                            <ClearIcon />
+                                                        </IconButton>
+                                                    </Box>
+                                                </Stack>
+                                            ))}
+                                            <Button onClick={() => push({ name: '', price: '' })}><AddIcon /> Add Another Variant</Button>
+                                        </div>
+                                        }
+                                    </FieldArray>
+                                </Card>
+                            ))}
+                            <Button color="secondary" onClick={() => push({ name: '', variants: { name: '', price: '' } })}><AddIcon /> Add Another Option</Button>
+                        </div>
+                    }
+                </FieldArray>
+            </FormikProvider>
     }
 }
 

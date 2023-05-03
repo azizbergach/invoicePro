@@ -32,7 +32,7 @@ import React from 'react';
 import { phoneFromat } from 'src/utils/format';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useSnackbar } from 'notistack';
-import ViewCustumer from './view-customer';
+import ViewCustomer from './view-customer';
 
 
 
@@ -264,7 +264,7 @@ export const CustomersTable = (props) => {
           <Button color='error' onClick={() => handleDelete('Yes')}>Yes</Button>
         </DialogActions>
       </Dialog>
-      <ViewCustumer open={view} setOpen={setView} customer={selectedCustomer} />
+      <ViewCustomer open={view} setOpen={setView} customer={selectedCustomer} />
     </Card>
   );
 };

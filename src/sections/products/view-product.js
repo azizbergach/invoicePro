@@ -1,45 +1,45 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { phoneFromat } from "src/utils/format";
 
-function ViewCustomer({ customer, open, setOpen }) {
+function ViewProduct({ product, open, setOpen }) {
 
     const handleClose = () => {
         setOpen(false)
     }
-    return customer ? (<Dialog
+    return product ? (<Dialog
         open={open}
         onClose={handleClose}
     >
         <DialogTitle>
-            Customer #ID: {customer.CustomerNumber}
+            Product #ID: {product.ProductNumber}
         </DialogTitle>
         <DialogContent style={{ minWidth: 400, padding: 50 }}>
             <div style={{ display: "flex", justifyContent: 'space-between' }} >
                 <div>
-                    <strong>Customer Name</strong>
-                    <p>{customer.name}</p>
+                    <strong>Product Name</strong>
+                    <p>{product.name}</p>
                 </div>
                 <div>
                     <strong>City</strong>
-                    <p>{customer.city}</p>
+                    <p>{product.city}</p>
                 </div>
             </div>
             <div>
                 <strong>Phone Number</strong>
-                <p>{phoneFromat(customer.phoneNumber)}</p>
+                <p>{phoneFromat(product.phoneNumber)}</p>
             </div>
             <div>
                 <strong>Address</strong>
-                <p>{customer.address}</p>
+                <p>{product.address}</p>
             </div>
             <div style={{ display: "flex", justifyContent: 'space-between' }} >
                 <div>
                     <strong>CIN</strong>
-                    <p>{customer.cinNumber || "none"}</p>
+                    <p>{product.cinNumber || "none"}</p>
                 </div>
                 <div>
                     <strong>ICE</strong>
-                    <p>{customer.iceNumber || "none"}</p>
+                    <p>{product.iceNumber || "none"}</p>
                 </div>
             </div>
         </DialogContent>
@@ -49,4 +49,4 @@ function ViewCustomer({ customer, open, setOpen }) {
     </Dialog >) : null;
 }
 
-export default ViewCustomer;
+export default ViewProduct;

@@ -3,6 +3,7 @@ import CogIcon from '@heroicons/react/24/solid/CogIcon';
 import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import UserIcon from '@heroicons/react/24/solid/UserIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { SvgIcon } from '@mui/material';
 
 
@@ -33,6 +34,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Products',
+    path: '/products',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ShoppingBasketIcon />
       </SvgIcon>
     )
   },

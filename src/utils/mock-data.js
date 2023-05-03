@@ -59,3 +59,35 @@ export async function generateuserMockData() {
     });
     return data;
 }
+
+
+export function generateProductMockData() {
+    const Categories = ["Electronics", "Clothing", "Home Appliances", "Beauty Products", "Books", "Toys and Games", "Sporting Goods", "Pet Supplies", "Furniture", "Food and Beverage"];
+    const Status = ["en stock", "rupture de stock"];
+    const data = [];
+    for (let i = 0; i < 50; i++) {
+        data.push({
+            id: faker.random.alphaNumeric(10),
+            name: faker.name.fullName(),
+            category: Categories[Math.floor(Math.random() * 10)],
+            sku: faker.datatype.number({ min: 100000 }).toString(),
+            price: faker.datatype.float({ min: 10, max: 100, precision: 0.01 }),
+            status: Status[Math.floor(Math.random() * 2)],
+            image: faker.image.fashion(),
+            quantity: faker.datatype.number({ min: 10, max: 100 }),
+            options: [
+                {
+                    name: "color",
+                    variants: [{ name: faker.datatype.number({ min: 10, max: 100 }), price: faker.datatype.float({ min: 10, max: 100, precision: 0.01 }) }, { name: faker.color.human(), price: faker.datatype.float({ min: 10, max: 100, precision: 0.01 }) }]
+                },
+                {
+                    name: "size",
+                    variants: [{ name: faker.datatype.number({ min: 10, max: 100 }), price: faker.datatype.float({ min: 10, max: 100, precision: 0.01 }) }, { name: faker.datatype.number({ min: 10, max: 100 }), price: faker.datatype.float({ min: 10, max: 100, precision: 0.01 }) }]
+                }
+            ],
+            productNumber: ++i,
+            createdAt: new Date()
+        });
+    }
+    return data;
+}

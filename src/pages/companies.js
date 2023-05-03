@@ -800,20 +800,19 @@ const Page = () => {
 
   const count = Math.ceil(companyData.length / rowsPerPage);
 
-  console.log(companies.length);
 
   const initialValues = {
-    name: 'taher',
+    name: '',
     logoUrl: '',
     type: '',
-    phoneNumber: '654447788',
-    city: 'Agadir',
-    address: 'mmldlk slksm',
-    ifNumber: '347890754323456784',
-    iceNumber: '356789087456789',
-    tpNumber: '35678908756789',
+    phoneNumber: '',
+    city: '',
+    address: '',
+    ifNumber: '',
+    iceNumber: '',
+    tpNumber: '',
     bank: 'CIH',
-    rib: '35678908756789088',
+    rib: '',
     submit: null
   }
 
@@ -1043,7 +1042,7 @@ const Page = () => {
   const handleEdit = async (company) => {
     setShowAdd(true);
     setSelectedId(company.id);
-    formik.setValues(company, false);
+    formik.setValues(company, true);
     setButtons(["Discard", "Update"]);
     setTitle("Update Company Info");
   }

@@ -4,14 +4,14 @@ import Field from "./Field";
 
 /**
  * 
- * @param {string} type  user, customer ...
+ * @param {string} title  the title of the popup
  * @param {boolean} open  specifies whether this component is showing up or not
  * @param {function} setOpen  set the open to false
  * @param {array} Fields   specify the feilds that will be shown within the component
  * @param {object} formik formik
  * @param {array} buttons buttons name
+ * @param {function} handleSubmit function that called one submitting the form
  * 
- * @returns add new [type]
  */
 
 function AddPopup({ title, open, setOpen, Fields, formik, buttons, handleSubmit }) {
