@@ -14,6 +14,10 @@ import { Store } from 'src/utils/store';
 import { useSnackbar } from 'notistack';
 import { ProductsTable } from 'src/sections/products/products-table';
 import FilterProducts from 'src/sections/products/product-filter';
+import { OverviewBudget } from 'src/sections/overview/overview-budget';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+
+
 
 const data = [
     {
@@ -455,12 +459,12 @@ const Page = () => {
         name: '',
         category: '',
         sku: '',
-        price: null,
+        price: '',
         status: '',
         image: '',
-        quantity: null,
+        quantity: 0,
         options: [
-            { name: 'color', variants: [{ name: '', price: null }, { name: '', price: null }] }
+            { name: '', variants: [{ name: '', price: null }, { name: '', price: null }] }
         ],
         submit: null
     }
@@ -488,7 +492,7 @@ const Page = () => {
             });
             setProductData(prev => [...prev, data]);
             dispatch({
-                type: "CREATE_CUSTOMER",
+                type: "CREATE_PRODUCT",
                 data
             });
             enqueueSnackbar(`${data.name} was added successfuly`, { variant: "success" });
@@ -514,7 +518,7 @@ const Page = () => {
             setProductData(prev => prev.map(product => { return (product.id === id) ? data : product }));
 
             dispatch({
-                type: "UPDATE_CUSTOMER",
+                type: "UPDATE_PRODUCT",
                 data
             })
 
@@ -552,11 +556,11 @@ const Page = () => {
             quantity: Yup.number().required(),
             options: Yup.array().of(
                 Yup.object({
-                    name: Yup.string(),
+                    name: Yup.string().required(),
                     variants: Yup.array().of(
                         Yup.object({
-                            name: Yup.string(),
-                            price: Yup.number()
+                            name: Yup.string().required(),
+                            price: Yup.number().required()
                         })
                     )
                 })
@@ -615,11 +619,12 @@ const Page = () => {
         },
         {
             name: "stack",
+            addedProps: { justifyContent: "space-around" },
             childs: [
                 {
                     label: "Prix",
                     name: "price",
-                    currency: "MAD"
+                    currency: "DH"
                 },
                 {
                     label: "Quantity",
@@ -658,14 +663,12 @@ const Page = () => {
     }
 
     const handleDeleteMany = async (selected) => {
-        console.log(selected);
         try {
             const { data } = await axios.post('/api/deleteMany', {
                 table: "product",
                 idsToDelete: selected
             })
-            console.log(data);
-            dispatch({ action: 'DELETE_MANY', data });
+            dispatch({ action: 'PRODUCT_DELETE_MANY', data });
 
             setProductData(prev => prev.filter(c => !selected.includes(c.id)))
 
@@ -679,6 +682,11 @@ const Page = () => {
         data,
         selected: productsSelection.selected,
         handleDeleteMany: handleDeleteMany
+    }
+
+    const CapitalCalc = () => {
+        const capital = data.reduce((a, b) => (b.status === "en stock") ? a + b.price : a, 0);
+        return `${capital}DH`
     }
 
     return (
@@ -743,6 +751,10 @@ const Page = () => {
                                 </Button>
                             </div>
                             <AddPopup {...ADDProps} />
+                        </Stack>
+                        <Stack direction="row" >
+                            <OverviewBudget {...{ difference: 5, positive: true, sx: {}, value: CapitalCalc(), title: "CAPITAL EN STOCK" }} />
+                            <OverviewBudget {...{ difference: 10, positive: false, sx: {}, value: data.filter(p => p.status === "en stock").length, title: "PRODUITS EN STOCK", icon: <ShoppingBasketIcon />, backgroundColor: "success.main" }} />
                         </Stack>
                         <FilterProducts {...filterProductsProps} />
                         <ProductsTable

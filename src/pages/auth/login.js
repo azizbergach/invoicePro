@@ -33,7 +33,6 @@ const Page = () => {
         .required('Email is required'),
       password: Yup
         .string()
-        .min(8)
         .required('Password is required'),
     }),
     onSubmit: async (values, helpers) => {

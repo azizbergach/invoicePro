@@ -86,22 +86,31 @@ export const CompanyCard = ({ company, handleEdit, setCompanyData }) => {
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
       <Stack
+        flexDirection="row"
         alignItems="center"
-        direction="row"
-        sx={{
-          width: "100%",
-          justifyContent: "space-around"
-        }}
       >
-        <IconButton onClick={() => handleView(company)} color='secondary' aria-label="delete">
-          <VisibilityIcon />
-        </IconButton>
-        <IconButton onClick={() => handleEdit(company)} color='primary' aria-label="delete">
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={() => handleDelete(company)} color='error' aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
+        <Stack
+          alignItems="center"
+          direction="row"
+          sx={{
+            justifyContent: "space-around"
+          }}
+        >
+          <IconButton onClick={() => handleView(company)} color='secondary' aria-label="delete">
+            <VisibilityIcon />
+          </IconButton>
+          <IconButton onClick={() => handleEdit(company)} color='primary' aria-label="delete">
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(company)} color='error' aria-label="delete">
+            <DeleteIcon />
+          </IconButton>
+        </Stack>
+        <Stack>
+          <Typography>
+            {company.iceNumber}
+          </Typography>
+        </Stack>
       </Stack>
       <Dialog
         open={showConfirm}

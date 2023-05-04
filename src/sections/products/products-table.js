@@ -33,7 +33,9 @@ import React from 'react';
 import { phoneFromat } from 'src/utils/format';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useSnackbar } from 'notistack';
-import ViewProduct from './view-product';
+import { SeverityPill } from 'src/components/severity-pill';
+import QuantityInput from 'src/layouts/dashboard/QuntityInput';
+import ViewProduct from './product-view';
 
 
 
@@ -103,6 +105,11 @@ export const ProductsTable = (props) => {
         setView(true);
     }
 
+    const statusMap = {
+        "en stock": "success",
+        "rupture de stock": "error"
+    }
+
     return (
         <Card>
             <Scrollbar>
@@ -137,6 +144,9 @@ export const ProductsTable = (props) => {
                                 </TableCell>
                                 <TableCell>
                                     Price
+                                </TableCell>
+                                <TableCell>
+                                    Quantity
                                 </TableCell>
                                 <TableCell>
                                     Status
@@ -193,10 +203,15 @@ export const ProductsTable = (props) => {
                                             {product.options.length}
                                         </TableCell>
                                         <TableCell>
-                                            ${product.price}
+                                            {product.price}DH
                                         </TableCell>
                                         <TableCell>
-                                            <Chip label={product.status} color={product.status === "en stock" ? "success" : "error"} />
+                                            <QuantityInput {...{ name: 'quantity', tableData: product, table: 'product' }} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <SeverityPill color={statusMap[product.status]}>
+                                                {product.status}
+                                            </SeverityPill>
                                         </TableCell>
                                         <TableCell>
                                             <Stack direction="row">

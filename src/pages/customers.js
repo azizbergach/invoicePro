@@ -253,7 +253,7 @@ const Page = ({ data }) => {
         idsToDelete: selected
       })
       console.log(data);
-      dispatch({ action: 'DELETE_MANY', data });
+      dispatch({ action: 'CUSTOMER_DELETE_MANY', data });
 
       setCustomerData(prev => prev.filter(c => !selected.includes(c.id)))
 
